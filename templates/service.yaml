@@ -5,11 +5,27 @@ metadata:
   labels:
     {{- include "k8s-satisfactory-server.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  type: NodePort
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - port: 7777
+      nodePort: 30777
+      protocol: UDP
+      name: gameudp
+      targetPort: gameudp
+    - port: 7777
+      nodePort: 30777
       protocol: TCP
-      name: http
+      name: gametcp
+      targetPort: gametcp
+  # type: ClusterIP
+  # ports:
+  #   - port: 7777
+  #     protocol: UDP
+  #     name: gameudp
+  #     targetPort: gameudp
+  #   - port: 7777
+  #     protocol: TCP
+  #     name: gametcp
+  #     targetPort: gametcp
   selector:
     {{- include "k8s-satisfactory-server.selectorLabels" . | nindent 4 }}
